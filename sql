@@ -31,3 +31,29 @@
 -- (using a CTE/subquery to return the number - eg. 1.99)
 
 -- CHECK OUT THE HINTS FILE IF YOU GET STUCK
+
+
+
+
+
+WITH pg13 AS (
+        SELECT 
+        film_id, rating, rental_rate
+        FROM
+        film
+        WHERE
+        rating = 'PG-13'
+)
+SELECT 
+pg13.film_id, pg13.rating, pg13.rental_rate,
+    CASE 
+        WHEN(pg13.rental_rate= '.99') THEN '.10'
+        WHEN(pg13.rental_rate = '2.99') THEN '1.00'
+    ELSE pg13.rental_rate 
+    END AS new_rate 
+FROM
+pg13
+GROUP BY
+pg13.rental_rate, pg13.film_id, pg13.rating
+ORDER BY
+pg13.rental_rate;
